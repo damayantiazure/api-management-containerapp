@@ -1,8 +1,8 @@
 
 param apimServiceName string
 param apiSwaggerUri string
-param productName string = 'neptune-product'
-param apiName string = 'neptune-api'
+param productName string
+param apiName string
 
 module neptuneProducts 'neptune-product/neptune-product.bicep' = {
   name: productName

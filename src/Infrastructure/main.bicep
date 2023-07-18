@@ -9,6 +9,12 @@ param logAnalyticsName string
 param appInsightName string
 param acaEnvName string
 
+param apimServiceName string
+param publisherEmail string
+param publisherName string
+param sku string
+param skuCount int
+
 module uami 'modules/identity.bicep' = {
   name: uamiName
   params: {
@@ -73,5 +79,18 @@ module acaEnvironment 'modules/environment.bicep' = {
     location: location
     envrionmentName: acaEnvName
     laWorkspaceName: logAnalyticsName
+  }
+}
+
+
+module apimService 'modules/apim.bicep' = {
+  name: apimServiceName
+  params: {
+    apimServiceName: apimServiceName
+    location: location
+    sku: sku
+    skuCount: skuCount
+    publisherEmail: publisherEmail
+    publisherName: publisherName
   }
 }

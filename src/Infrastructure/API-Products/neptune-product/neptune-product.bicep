@@ -1,6 +1,6 @@
 
 param apimServiceName string
-param apiSwaggerUri string
+param serviceUrl string
 param productName string 
 param apiName string 
 
@@ -26,6 +26,6 @@ module neptuneWebApi 'apis/neptune-webapi.bicep' = {
     apimServiceName: apimServiceName
     productName: productName
     apiName: apiName
-    apiSwaggerUri: apiSwaggerUri
+    serviceUrl: serviceUrl
   }
 }

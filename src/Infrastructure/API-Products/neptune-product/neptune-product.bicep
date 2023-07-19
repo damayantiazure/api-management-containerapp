@@ -11,8 +11,8 @@ resource neptuneProduct 'Microsoft.ApiManagement/service/products@2023-03-01-pre
     description: '${productName} proxied to ACA API online'
     terms: '${productName} Terms'
     subscriptionRequired: false
-    approvalRequired: false
-    subscriptionsLimit: 1
+    // approvalRequired: false
+    // subscriptionsLimit: 1
     state: 'published'    
   }
 }

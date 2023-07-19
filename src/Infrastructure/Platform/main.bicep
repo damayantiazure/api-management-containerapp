@@ -15,72 +15,72 @@ param publisherName string
 param sku string
 param skuCount int
 
-module uami 'modules/identity.bicep' = {
-  name: uamiName
-  params: {
-    uamiName: uamiName
-    location: location
-  }
-}
+// module uami 'modules/identity.bicep' = {
+//   name: uamiName
+//   params: {
+//     uamiName: uamiName
+//     location: location
+//   }
+// }
 
-module containerRegistry  'modules/registry.bicep' = {
-  name: containerRegistryName
-  params: {
-    location: location
-    registryName: containerRegistryName
-    skuName: 'Basic'
-    userAssignedIdentityPrincipalId: uami.outputs.principalId
-    adminUserEnabled: false
-  }
-}
+// module containerRegistry  'modules/registry.bicep' = {
+//   name: containerRegistryName
+//   params: {
+//     location: location
+//     registryName: containerRegistryName
+//     skuName: 'Basic'
+//     userAssignedIdentityPrincipalId: uami.outputs.principalId
+//     adminUserEnabled: false
+//   }
+// }
 
-module keyvault 'modules/keyvault.bicep' = {
-  name: keyvaultName
-  params: {
-    keyVaultName: keyvaultName
-    objectId: uami.outputs.principalId
-    enabledForDeployment: false
-    enabledForDiskEncryption: false
-    enabledForTemplateDeployment: false
-    keysPermissions: [
-      'get'
-      'list'
-    ]
-    secretsPermissions: [
-      'get'
-      'list'
-    ]
-    location: location
-    skuName: 'standard'  
-  }
-}
+// module keyvault 'modules/keyvault.bicep' = {
+//   name: keyvaultName
+//   params: {
+//     keyVaultName: keyvaultName
+//     objectId: uami.outputs.principalId
+//     enabledForDeployment: false
+//     enabledForDiskEncryption: false
+//     enabledForTemplateDeployment: false
+//     keysPermissions: [
+//       'get'
+//       'list'
+//     ]
+//     secretsPermissions: [
+//       'get'
+//       'list'
+//     ]
+//     location: location
+//     skuName: 'standard'  
+//   }
+// }
 
-module logAnalytics 'modules/log-analytics.bicep' = {
-  name: logAnalyticsName
-  params: {
-    logAnalyticsName: logAnalyticsName
-    localtion: location
-  }
-}
+// module logAnalytics 'modules/log-analytics.bicep' = {
+//   name: logAnalyticsName
+//   params: {
+//     logAnalyticsName: logAnalyticsName
+//     localtion: location
+//   }
+// }
 
-module appInsights 'modules/app-insights.bicep' = {
-  name: appInsightName
-  params: {
-    appInsightName: appInsightName
-    location: location
-    laWorkspaceId: logAnalytics.outputs.laWorkspaceId
-  }
-}
+// module appInsights 'modules/app-insights.bicep' = {
+//   name: appInsightName
+//   params: {
+//     appInsightName: appInsightName
+//     location: location
+//     laWorkspaceId: logAnalytics.outputs.laWorkspaceId
+//   }
+// }
 
-module acaEnvironment 'modules/environment.bicep' = {
-  name: acaEnvName
-  params: {
-    appInsightKey: appInsights.outputs.InstrumentationKey
-    location: location
-    envrionmentName: acaEnvName
-    laWorkspaceName: logAnalyticsName
-  }
-}
+// module acaEnvironment 'modules/environment.bicep' = {
+//   name: acaEnvName
+//   params: {
+//     appInsightKey: appInsights.outputs.InstrumentationKey
+//     location: location
+//     envrionmentName: acaEnvName
+//     laWorkspaceName: logAnalyticsName
+//   }
+// }
 
 
 module apimService 'modules/apim.bicep' = {

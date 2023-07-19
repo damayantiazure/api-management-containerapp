@@ -1,7 +1,7 @@
 <policies>
     <inbound>
         <send-request mode="new" response-variable-name="tokenstate" timeout="20" ignore-error="true">
-            <set-url>https://dev.azure.com/moim/_apis/connectionData</set-url>
+            <set-url>{{azuredevopsendpoint}}</set-url>
             <set-method>GET</set-method>
             <set-header name="Authorization" exists-action="override">
                 <value>@(context.Request.Headers.GetValueOrDefault("Authorization","scheme param"))</value>

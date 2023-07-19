@@ -3,6 +3,24 @@ param apimServiceName string
 param containerAppName string
 param productName string
 param apiName string
+param azureDevOpsEndpoint string
+param azureDevOpsEndpointKeyName string
+
+resource apiManagementService 'Microsoft.ApiManagement/service@2023-03-01-preview' existing = {
+  name: apimServiceName  
+}
+
+resource nameValueEntryForAzureDevOps 'Microsoft.ApiManagement/service/namedValues@2023-03-01-preview' = {
+  name: azureDevOpsEndpointKeyName
+  parent: apiManagementService
+  properties: {
+    displayName: azureDevOpsEndpointKeyName
+    secret: false
+    value: azureDevOpsEndpoint
+  }
+}
+
+
 
 module neptureContainerApp 'container-apps.bicep' = {
   name: containerAppName

@@ -18,3 +18,11 @@ resource apiManagementService 'Microsoft.ApiManagement/service@2023-03-01-previe
     publisherEmail: publisherEmail
   }
 }
+
+
+module servicePolicies 'api-policies/azdo-authorization-policy.bicep' = {
+  name: '${apiManagementService.name}-service-policy'  
+  params: {
+    apimServiceName: apimServiceName
+  }  
+}

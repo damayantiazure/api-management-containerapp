@@ -1,7 +1,7 @@
 param name string
 param location string = resourceGroup().location
 param sku string = 'Standard'
-param publicIpAllocationMethod string = 'Dynamic'
+param publicIpAllocationMethod string = 'Static'
 
 resource publicIpAddress 'Microsoft.Network/publicIPAddresses@2018-10-01' = {
   name: name

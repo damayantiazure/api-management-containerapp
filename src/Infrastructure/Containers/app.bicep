@@ -27,7 +27,7 @@ module frontendApp 'modules/http-app.bicep' = {
     useManagedIdentityForImagePull: true
     containerPort: 80
     enableIngress: true
-    isExternalIngress: false
+    isExternalIngress: true // external ingress for a vent app is still a private IP
     minReplicas: 1
   }
 }

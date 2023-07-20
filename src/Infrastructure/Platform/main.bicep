@@ -10,23 +10,24 @@ param appInsightName string
 param acaEnvName string
 
 param apimServiceName string
+param publicIpAddressName string
 param publisherEmail string
 param publisherName string
 param sku string
 param skuCount int
 
-module uami 'modules/identity.bicep' = {
-  name: uamiName
-  params: {
-    uamiName: uamiName
-    location: location
-  }
-}
-
 module virtualNetwork 'modules/virtual-network.bicep' = {
   name: vnetName
   params: {
     vnetName: vnetName
+    location: location    
+  }
+}
+/*
+module uami 'modules/identity.bicep' = {
+  name: uamiName
+  params: {
+    uamiName: uamiName
     location: location
   }
 }
@@ -91,8 +92,8 @@ module acaEnvironment 'modules/environment.bicep' = {
     laWorkspaceName: logAnalyticsName
   }
 }
+*/
 
-/*
 module apimService 'modules/apim.bicep' = {
   name: apimServiceName
   params: {
@@ -102,6 +103,9 @@ module apimService 'modules/apim.bicep' = {
     skuCount: skuCount
     publisherEmail: publisherEmail
     publisherName: publisherName
+    publicIpAddressName: publicIpAddressName
+    subnetName: virtualNetwork.outputs.apimSubnetName
+    virtualNetworkName: virtualNetwork.name
   }
 }
-*/
+

@@ -1,9 +1,11 @@
 
 param location string = resourceGroup().location
 param vnetName string
+param defaultSubnetName string = 'default' // do NOT change this name
+param apimSubnetName string = 'apimsubnet'
 param addressPrefix string = '10.0.0.0/16'
 param containerSubnetAddressPrefix string = '10.0.2.0/23'
-
+param apimAddressPrefix string = '10.0.1.0/27'
 
 resource virtualNetwork 'Microsoft.Network/virtualNetworks@2021-05-01' = {
   name: vnetName
@@ -16,9 +18,15 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2021-05-01' = {
     }
     subnets: [
       {
-        name: 'default'
+        name: defaultSubnetName
         properties: {
           addressPrefix: containerSubnetAddressPrefix
+        }
+      }
+      {
+        name: apimSubnetName
+        properties: {
+          addressPrefix: apimAddressPrefix
         }
       }
     ]
@@ -31,7 +39,18 @@ resource vnet 'Microsoft.Network/virtualNetworks@2023-02-01' existing = {
 
 resource defaultSubnet 'Microsoft.Network/virtualNetworks/subnets@2023-02-01' existing = {
   parent: vnet
-  name: 'default'
+  name: defaultSubnetName
 }
 
+resource apimSubnet 'Microsoft.Network/virtualNetworks/subnets@2023-02-01' existing = {
+  parent: vnet
+  name: apimSubnetName
+}
+
+output vnetId string = vnet.id
+
+output defaultSubnetName string = defaultSubnet.name
 output defaultSubnetId string = defaultSubnet.id
+
+output apimSubnetName string = apimSubnet.name
+output apimSubnetId string = apimSubnet.id

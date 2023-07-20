@@ -27,7 +27,7 @@ module frontendApp 'modules/http-app.bicep' = {
     useManagedIdentityForImagePull: true
     containerPort: 80
     enableIngress: true
-    isExternalIngress: true
+    isExternalIngress: false
     minReplicas: 1
   }
 }

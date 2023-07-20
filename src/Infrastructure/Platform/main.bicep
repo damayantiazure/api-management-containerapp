@@ -1,8 +1,8 @@
 targetScope = 'resourceGroup'
 
-
 param location string = resourceGroup().location
 param uamiName string 
+param vnetName string
 param containerRegistryName string
 param keyvaultName string
 param logAnalyticsName string
@@ -19,6 +19,14 @@ module uami 'modules/identity.bicep' = {
   name: uamiName
   params: {
     uamiName: uamiName
+    location: location
+  }
+}
+
+module virtualNetwork 'modules/virtual-network.bicep' = {
+  name: vnetName
+  params: {
+    vnetName: vnetName
     location: location
   }
 }
@@ -72,17 +80,19 @@ module appInsights 'modules/app-insights.bicep' = {
   }
 }
 
+
 module acaEnvironment 'modules/environment.bicep' = {
   name: acaEnvName
   params: {
     appInsightKey: appInsights.outputs.InstrumentationKey
+    infrastructureSubnetId: virtualNetwork.outputs.defaultSubnetId
     location: location
     envrionmentName: acaEnvName
     laWorkspaceName: logAnalyticsName
   }
 }
 
-
+/*
 module apimService 'modules/apim.bicep' = {
   name: apimServiceName
   params: {
@@ -94,3 +104,4 @@ module apimService 'modules/apim.bicep' = {
     publisherName: publisherName
   }
 }
+*/

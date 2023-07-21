@@ -1,11 +1,10 @@
 using 'products.bicep'
 
-
-param apimServiceName = 'neptune-apim'
+param apimServiceName = 'neptune-apimsvc'
+param envrionmentName = 'neptune-aca-env'
 param containerAppName = 'neptune-webapi'
 param productName = 'neptune-product'
 param apiName = 'neptune-api'
 param azureDevOpsEndpoint = 'https://dev.azure.com/moim/_apis/connectionData'
 param azureDevOpsEndpointKeyName = 'azuredevopsendpoint'
 param backendHostKeyName = 'containerappbackendhostname'
-param envrionmentName = 'neptune-aca-env'

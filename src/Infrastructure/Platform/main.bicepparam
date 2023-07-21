@@ -7,7 +7,7 @@ param logAnalyticsName = 'neptune-log-analytics'
 param appInsightName = 'neptune-app-insight'
 param acaEnvName = 'neptune-aca-env'
 
-param apimServiceName = 'neptune-apiservice'
+param apimServiceName = 'neptune-apimsvc'
 param publisherEmail = 'moim.hossain@microsoft.com'
 param publisherName = 'Neptune Inc.'
 param sku = 'Premium' // (Premium | Standard | Developer | Basic | Consumption)

@@ -2,6 +2,7 @@ param name string
 param location string = resourceGroup().location
 param sku string = 'Standard'
 param publicIpAllocationMethod string = 'Static'
+param domainNameLabel string
 
 resource publicIpAddress 'Microsoft.Network/publicIPAddresses@2018-10-01' = {
   name: name
@@ -11,8 +12,12 @@ resource publicIpAddress 'Microsoft.Network/publicIPAddresses@2018-10-01' = {
   }
   properties: {    
     publicIPAllocationMethod: publicIpAllocationMethod
+    dnsSettings: {
+      domainNameLabel: name
+    }
   }
 }
 
 output publicIpAddress string = publicIpAddress.properties.ipAddress
 output publicIpAddressId string = publicIpAddress.id
+

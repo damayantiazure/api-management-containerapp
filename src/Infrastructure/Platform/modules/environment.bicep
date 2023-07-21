@@ -33,3 +33,4 @@ resource environment 'Microsoft.App/managedEnvironments@2022-03-01' = {
   }
 }
 
+output staticIp string = environment.properties.staticIp

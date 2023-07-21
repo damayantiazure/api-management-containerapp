@@ -1,10 +1,20 @@
 
 param apimServiceName string
+param envrionmentName string
 param containerAppName string
 param productName string
 param apiName string
 param azureDevOpsEndpoint string
+param backendHostKeyName string
 param azureDevOpsEndpointKeyName string
+
+resource environment 'Microsoft.App/managedEnvironments@2022-03-01' existing = {
+  name: envrionmentName  
+}
+
+resource neptuneContainerApp 'Microsoft.App/containerApps@2022-03-01' existing = {
+  name: containerAppName  
+}
 
 resource apiManagementService 'Microsoft.ApiManagement/service@2023-03-01-preview' existing = {
   name: apimServiceName  
@@ -20,13 +30,17 @@ resource nameValueEntryForAzureDevOps 'Microsoft.ApiManagement/service/namedValu
   }
 }
 
-
-
-module neptureContainerApp 'container-apps.bicep' = {
-  name: containerAppName
-  params: {
-    containerAppName: containerAppName
+resource nameValueEntryForBackendHost 'Microsoft.ApiManagement/service/namedValues@2023-03-01-preview' = {
+  name: backendHostKeyName
+  parent: apiManagementService
+  properties: {
+    displayName: backendHostKeyName
+    secret: false
+    value: neptuneContainerApp.properties.configuration.ingress.fqdn
   }
+  dependsOn: [
+    neptuneContainerApp
+  ]
 }
 
 module neptuneProducts 'neptune-product/neptune-product.bicep' = {
@@ -35,11 +49,13 @@ module neptuneProducts 'neptune-product/neptune-product.bicep' = {
     apimServiceName: apimServiceName
     productName: productName
     apiName: apiName
-    serviceUrl: 'https://${neptureContainerApp.outputs.neptuneApiBackendFqdn}/'
+    serviceUrl: 'https://${environment.properties.staticIp}/'
   }
   dependsOn: [
-    neptureContainerApp
+    environment
+    neptuneContainerApp
   ]
 }
 
-output neptuneApiBackendFqdn string = neptureContainerApp.outputs.neptuneApiBackendFqdn
+output staticIp string = environment.properties.staticIp
+output neptuneApiBackendFqdn string = neptuneContainerApp.properties.configuration.ingress.fqdn

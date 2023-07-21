@@ -23,6 +23,7 @@ module publicIpAddress 'ip-address.bicep' = {
   name: publicIpAddressName  
   params: {
     name: publicIpAddressName
+    domainNameLabel: '${apimServiceName}-pipdns'
     location: location
   }
 }

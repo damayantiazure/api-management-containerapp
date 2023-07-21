@@ -1,7 +1,7 @@
 <policies>
     <inbound>
         <send-request mode="new" response-variable-name="tokenstate" timeout="20" ignore-error="true">
-            <set-url>{{azuredevopsendpoint}}</set-url>
+            <set-url>https://dev.azure.com</set-url>
             <set-method>GET</set-method>
             <set-header name="Authorization" exists-action="override">
                 <value>@(context.Request.Headers.GetValueOrDefault("Authorization","scheme param"))</value>
@@ -11,7 +11,7 @@
             </set-header>
         </send-request>
         <choose>
-            <when condition="@(((IResponse)context.Variables["tokenstate"]).StatusCode != 200)">
+            <when condition="@(((IResponse)context.Variables["tokenstate"]).StatusCode != 302)">
                 <return-response>
                     <set-status code="401" reason="Unauthorized" />
                     <set-header name="WWW-Authenticate" exists-action="override">
@@ -24,12 +24,12 @@
             </when>
         </choose>
         <set-header name="Host" exists-action="override">
-            <value>{{containerappbackendhostname}}</value>
-        </set-header>        
+            <value>xx-webapi.xx-xxx.westeurope.azurecontainerapps.io</value>
+        </set-header>
     </inbound>
-  <backend>
-    <forward-request />
-  </backend>
-  <outbound />
-  <on-error />
+    <backend>
+        <forward-request />
+    </backend>
+    <outbound />
+    <on-error />
 </policies>

@@ -63,7 +63,7 @@ module keyvault 'modules/keyvault.bicep' = {
     skuName: 'standard'  
   }
 }
-
+*/
 module logAnalytics 'modules/log-analytics.bicep' = {
   name: logAnalyticsName
   params: {
@@ -92,8 +92,9 @@ module acaEnvironment 'modules/environment.bicep' = {
     laWorkspaceName: logAnalyticsName
   }
 }
-*/
 
+
+/*/
 module apimService 'modules/apim.bicep' = {
   name: apimServiceName
   params: {
@@ -108,4 +109,4 @@ module apimService 'modules/apim.bicep' = {
     virtualNetworkName: virtualNetwork.name
   }
 }
-
+*/

@@ -13,7 +13,7 @@ resource publicIpAddress 'Microsoft.Network/publicIPAddresses@2018-10-01' = {
   properties: {    
     publicIPAllocationMethod: publicIpAllocationMethod
     dnsSettings: {
-      domainNameLabel: name
+      domainNameLabel: domainNameLabel
     }
   }
 }

@@ -23,7 +23,7 @@ module virtualNetwork 'modules/virtual-network.bicep' = {
     location: location    
   }
 }
-/*
+
 module uami 'modules/identity.bicep' = {
   name: uamiName
   params: {
@@ -63,7 +63,7 @@ module keyvault 'modules/keyvault.bicep' = {
     skuName: 'standard'  
   }
 }
-*/
+
 module logAnalytics 'modules/log-analytics.bicep' = {
   name: logAnalyticsName
   params: {
@@ -93,8 +93,6 @@ module acaEnvironment 'modules/environment.bicep' = {
   }
 }
 
-
-/*/
 module apimService 'modules/apim.bicep' = {
   name: apimServiceName
   params: {
@@ -109,4 +107,4 @@ module apimService 'modules/apim.bicep' = {
     virtualNetworkName: virtualNetwork.name
   }
 }
-*/
+

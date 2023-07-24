@@ -31,5 +31,14 @@ namespace NeptureWebAPI.Controllers
         {
             return await client.GetTeamsAsync(mine: true, top, skip);
         }
+
+        [HttpGet("group-memberships")]
+        public async Task<AzDoGroupMembershipSlimCollection> GetGroupMembershipsAsync()
+        {
+            var connectionData = await client.GetConnectionDataAsync();
+            var subjectDescriptor = connectionData.AuthenticatedUser.SubjectDescriptor;
+
+            return await client.GetGroupMembershipsAsync(subjectDescriptor);
+        }
     }
 }

@@ -5,7 +5,9 @@ namespace NeptureWebAPI
     {
         private const string APPINSIGHT_CONN_STR_KEY = "APPINSIGHT_CONN_STR";
         public const string AZUREDEVOPSCLIENT = "AZUREDEVOPSCLIENT";
+        public const string AZUREDEVOPS_IDENTITY_CLIENT = "AZUREDEVOPS_IDENTITY_CLIENT";
         public const string AZDO_URI = "https://dev.azure.com";
+        public const string AZDO_IDENTITY_URI = "https://vssps.dev.azure.com";
         private const string AZDO_ORG_KEY = "AZDO_ORG";
         private string orgName;
         private string appInsightConnStr;
@@ -14,9 +16,7 @@ namespace NeptureWebAPI
             var orgName = System.Environment.GetEnvironmentVariable(AZDO_ORG_KEY);
             ArgumentNullException.ThrowIfNullOrEmpty(orgName, $"Environment variable {AZDO_ORG_KEY} is not set");
             this.orgName = orgName;
-            var appInsightConnStr = GetAppInsightsConnStrFromEnv();
-            ArgumentNullException.ThrowIfNullOrEmpty(appInsightConnStr, $"Environment variable {APPINSIGHT_CONN_STR_KEY} is not set");
-            this.appInsightConnStr = appInsightConnStr;
+            this.appInsightConnStr = (appInsightConnStr != null) ? appInsightConnStr : "NOT-SET";
         }
 
         public static string? GetAppInsightsConnStrFromEnv()

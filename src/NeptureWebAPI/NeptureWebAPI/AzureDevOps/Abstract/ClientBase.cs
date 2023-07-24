@@ -1,5 +1,4 @@
 ﻿using System.Net.Http.Headers;
-using System.Security.Principal;
 using System.Text.Json;
 
 namespace NeptureWebAPI.AzureDevOps.Abstract
@@ -25,8 +24,18 @@ namespace NeptureWebAPI.AzureDevOps.Abstract
 
         protected async virtual Task<TPayload> GetAsync<TPayload>(string apiPath) where TPayload : class
         {
+            return await GetCoreAsync<TPayload>(AppConfig.AZUREDEVOPSCLIENT, apiPath);
+        }
+
+        protected async virtual Task<TPayload> GetVsspAsync<TPayload>(string apiPath) where TPayload : class
+        {
+            return await GetCoreAsync<TPayload>(AppConfig.AZUREDEVOPS_IDENTITY_CLIENT, apiPath);
+        }
+
+        private async Task<TPayload> GetCoreAsync<TPayload>(string apiType, string apiPath) where TPayload : class
+        {
             var (scheme, token) = GetCredentials();
-            using HttpClient client = httpClientFactory.CreateClient(AppConfig.AZUREDEVOPSCLIENT);
+            using HttpClient client = httpClientFactory.CreateClient(apiType);
             client.DefaultRequestHeaders.Authorization
                 = new AuthenticationHeaderValue(scheme, token);
             var path = $"/{appConfiguration.OrgName}/{apiPath}";
@@ -36,7 +45,7 @@ namespace NeptureWebAPI.AzureDevOps.Abstract
             {
                 var x = await response.Content.ReadAsStringAsync();
                 var result = await response.Content.ReadFromJsonAsync<TPayload>(this.jsonSerializerOptions);
-                if(result != null)
+                if (result != null)
                 {
                     return result;
                 }

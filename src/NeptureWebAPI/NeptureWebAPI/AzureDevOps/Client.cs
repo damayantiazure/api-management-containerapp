@@ -31,5 +31,15 @@ namespace NeptureWebAPI.AzureDevOps
         {
             return await this.GetAsync<AzDoTeamCollection>($"_apis/teams?$mine={mine}&$top={top}&$skip={skip}&api-version=7.0-preview.3");
         }
+
+        public async Task<AzDoConnectionData> GetConnectionDataAsync()
+        {
+            return await this.GetAsync<AzDoConnectionData>($"_apis/connectionData");
+        }
+
+        public async Task<AzDoGroupMembershipSlimCollection> GetGroupMembershipsAsync(string subjectDescriptor)
+        {
+            return await this.GetVsspAsync<AzDoGroupMembershipSlimCollection>($"_apis/graph/Memberships/{subjectDescriptor}?api-version=7.0-preview.1");
+        }
     }
 }

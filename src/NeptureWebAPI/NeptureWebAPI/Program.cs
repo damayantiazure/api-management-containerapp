@@ -5,23 +5,32 @@ using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var aiConnectionString = AppConfig.GetAppInsightsConnStrFromEnv();
+var enableAppInsights = !string.IsNullOrWhiteSpace(aiConnectionString);
 // Add services to the container.
 builder.Services.AddSingleton<AppConfig>();
-builder.Services.AddApplicationInsightsTelemetry(options =>
+if(enableAppInsights)
 {
-    options.ConnectionString = AppConfig.GetAppInsightsConnStrFromEnv();
-});
+    builder.Services.AddApplicationInsightsTelemetry(options =>
+    {
+        options.ConnectionString = AppConfig.GetAppInsightsConnStrFromEnv();
+    });
+}
+
 builder.Services.AddLogging(logging =>
 {
-    logging.AddApplicationInsights(
-        telemetryConfig =>
-        {
-            telemetryConfig.ConnectionString = AppConfig.GetAppInsightsConnStrFromEnv();
-        },
-        aiLoggingOptions =>
-        {
-            aiLoggingOptions.TrackExceptionsAsExceptionTelemetry = true;
-        });
+    if(enableAppInsights)
+    {
+        logging.AddApplicationInsights(
+            telemetryConfig =>
+            {
+                telemetryConfig.ConnectionString = AppConfig.GetAppInsightsConnStrFromEnv();
+            },
+            aiLoggingOptions =>
+            {
+                aiLoggingOptions.TrackExceptionsAsExceptionTelemetry = true;
+            });
+    }
     logging.AddConfiguration(builder.Configuration.GetSection("Logging"));
     logging.AddConsole();
     logging.AddDebug();
@@ -33,12 +42,8 @@ builder.Services.AddSingleton(new JsonSerializerOptions
     AllowTrailingCommas = true,
     PropertyNameCaseInsensitive = true
 });
-builder.Services.AddHttpClient(
-    AppConfig.AZUREDEVOPSCLIENT,
-    (services, client) =>
-    {
-        client.BaseAddress = new Uri(AppConfig.AZDO_URI);
-    });
+builder.Services.AddHttpClient(AppConfig.AZUREDEVOPSCLIENT, (services, client) => { client.BaseAddress = new Uri(AppConfig.AZDO_URI); });
+builder.Services.AddHttpClient(AppConfig.AZUREDEVOPS_IDENTITY_CLIENT, (services, client) => { client.BaseAddress = new Uri(AppConfig.AZDO_IDENTITY_URI); });
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddTransient<Client>();

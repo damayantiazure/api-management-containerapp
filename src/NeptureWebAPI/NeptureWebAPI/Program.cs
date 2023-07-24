@@ -1,13 +1,27 @@
-using System.Text.Json;
+
 using NeptureWebAPI;
 using NeptureWebAPI.AzureDevOps;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddSingleton<AppConfig>();
+builder.Services.AddApplicationInsightsTelemetry(options =>
+{
+    options.ConnectionString = AppConfig.GetAppInsightsConnStrFromEnv();
+});
 builder.Services.AddLogging(logging =>
 {
+    logging.AddApplicationInsights(
+        telemetryConfig =>
+        {
+            telemetryConfig.ConnectionString = AppConfig.GetAppInsightsConnStrFromEnv();
+        },
+        aiLoggingOptions =>
+        {
+            aiLoggingOptions.TrackExceptionsAsExceptionTelemetry = true;
+        });
     logging.AddConfiguration(builder.Configuration.GetSection("Logging"));
     logging.AddConsole();
     logging.AddDebug();

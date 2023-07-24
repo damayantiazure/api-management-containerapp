@@ -6,10 +6,12 @@ param containerRegistryName string
 param location string = resourceGroup().location
 param acaEnvName string 
 param uamiName string
+param appInsightName string
 param azureDevOpsOrg string 
 
 resource acaEnvironment 'Microsoft.App/managedEnvironments@2022-03-01'  existing = {   name: acaEnvName }
 resource uami 'Microsoft.ManagedIdentity/userAssignedIdentities@2018-11-30' existing = { name: uamiName }
+resource appInsights 'Microsoft.Insights/components@2020-02-02' existing = { name: appInsightName }
 
 module frontendApp 'modules/http-app.bicep' = {
   name: imageName
@@ -35,6 +37,10 @@ module frontendApp 'modules/http-app.bicep' = {
         name: 'AZDO_ORG'
         value: azureDevOpsOrg
       }
+      {
+        name: 'APPINSIGHT_CONN_STR'
+        value: appInsights.properties.ConnectionString
+      }      
     ]
   }
 }

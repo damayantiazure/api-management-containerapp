@@ -54,7 +54,7 @@ resource containerApp 'Microsoft.App/containerApps@2022-03-01' = {
     managedEnvironmentId: environment.id    
     configuration: {
       activeRevisionsMode: revisionMode
-      secrets: secrets      
+      secrets: secrets
       registries: isPrivateRegistry ? [
         {
           server: containerRegistry

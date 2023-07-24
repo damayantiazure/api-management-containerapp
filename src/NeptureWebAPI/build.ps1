@@ -1,5 +1,5 @@
 $imageName = "neptune-webapi"
-$tag = "latest"
+$tag = "beta1"
 $registry = "neptuneimages.azurecr.io"
 
 

@@ -39,62 +39,45 @@
                 "tags": [
                     "Teams"
                 ],
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "text/plain": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/AzDoTeamCollection"
-                                }
-                            },
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/AzDoTeamCollection"
-                                }
-                            },
-                            "text/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/AzDoTeamCollection"
-                                }
-                            }
+                "parameters": [
+                    {
+                        "name": "top",
+                        "in": "query",
+                        "style": "form",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 10
+                        }
+                    },
+                    {
+                        "name": "skip",
+                        "in": "query",
+                        "style": "form",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 0
                         }
                     }
-                }
-            }
-        },
-        "/WeatherForecast": {
-            "get": {
-                "tags": [
-                    "WeatherForecast"
                 ],
-                "operationId": "GetWeatherForecast",
                 "responses": {
                     "200": {
                         "description": "Success",
                         "content": {
                             "text/plain": {
                                 "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/WeatherForecast"
-                                    }
+                                    "$ref": "#/components/schemas/AzDoTeamCollection"
                                 }
                             },
                             "application/json": {
                                 "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/WeatherForecast"
-                                    }
+                                    "$ref": "#/components/schemas/AzDoTeamCollection"
                                 }
                             },
                             "text/json": {
                                 "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/WeatherForecast"
-                                    }
+                                    "$ref": "#/components/schemas/AzDoTeamCollection"
                                 }
                             }
                         }
@@ -144,29 +127,6 @@
                     "count": {
                         "type": "integer",
                         "format": "int32"
-                    }
-                },
-                "additionalProperties": false
-            },
-            "WeatherForecast": {
-                "type": "object",
-                "properties": {
-                    "date": {
-                        "type": "string",
-                        "format": "date"
-                    },
-                    "temperatureC": {
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    "temperatureF": {
-                        "type": "integer",
-                        "format": "int32",
-                        "readOnly": true
-                    },
-                    "summary": {
-                        "type": "string",
-                        "nullable": true
                     }
                 },
                 "additionalProperties": false

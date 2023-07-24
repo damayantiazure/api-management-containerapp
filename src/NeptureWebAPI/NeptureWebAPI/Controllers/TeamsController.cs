@@ -1,9 +1,6 @@
 ﻿
 using Microsoft.AspNetCore.Mvc;
 using NeptureWebAPI.AzureDevOps;
-using System.Net.Http.Headers;
-using System.Net.Http;
-using System.Text.Json;
 using NeptureWebAPI.AzureDevOps.Payloads;
 
 namespace NeptureWebAPI.Controllers
@@ -30,9 +27,9 @@ namespace NeptureWebAPI.Controllers
         }
 
         [HttpGet("all")]
-        public async Task<AzDoTeamCollection> GetTeamsAsync()
+        public async Task<AzDoTeamCollection> GetTeamsAsync([FromQuery] int top = 10, [FromQuery] int skip = 0)
         {
-            return await client.GetTeamsAsync();
+            return await client.GetTeamsAsync(mine: true, top, skip);
         }
     }
 }

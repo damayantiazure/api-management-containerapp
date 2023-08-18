@@ -8,7 +8,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development",
         "AZDO_ORG": "moim",
         "APPINSIGHT_CONN_STR": "",
-        "AZDO_PAT": "zna4bwkuo7gtm5k47sfz7xop4gxmpsrwxc45ioyzn5uu2dfg5kgq"
+        "AZDO_PAT": ""
       },
       "dotnetRunMessages": true,
       "applicationUrl": "http://localhost:5115"

@@ -1,5 +1,6 @@
 ﻿using NeptureWebAPI.AzureDevOps.Abstract;
 using NeptureWebAPI.AzureDevOps.Payloads;
+using NeptureWebAPI.Controllers;
 using System.Net.Http.Headers;
 using System.Text.Json;
 
@@ -40,6 +41,24 @@ namespace NeptureWebAPI.AzureDevOps
         public async Task<AzDoGroupMembershipSlimCollection> GetGroupMembershipsAsync(string subjectDescriptor)
         {
             return await this.GetVsspAsync<AzDoGroupMembershipSlimCollection>($"_apis/graph/Memberships/{subjectDescriptor}?api-version=7.0-preview.1");
+        }
+
+        public async Task<ClassificationNode> GetClassificationNodeAsync(string projectId, bool isAreaPath)
+        {            
+            var depth = 10;
+            var path = $"{projectId}/_apis/wit/classificationnodes/{(isAreaPath ? "Areas": "iterations")}?$depth={depth}&api-version=7.0";            
+            var node = await GetAsync<ClassificationNode>(path, true);
+            return node;
+        }
+
+        public async Task<AzDoClassificationNodeCreatedResponse> CreateNewClassificationNodeAsync(NewNodePayload newNodePayload)
+        {
+            var path = $"{newNodePayload.projectId}/_admin/_Areas/CreateClassificationNode?useApiUrl=true&__v=5";
+            var opBody = new AzDoClassificationNodeDetailsInPayload(NodeName: newNodePayload.nodeName, ParentId: newNodePayload.parentId);
+            var operation = JsonSerializer.Serialize(opBody, jsonSerializerOptions);
+
+            var payload = new AzDoClassificationNodePayload(OperationData: operation, SyncWorkItemTracking: false);
+            return await PostAsync<AzDoClassificationNodePayload, AzDoClassificationNodeCreatedResponse>(path, payload, true);
         }
     }
 }

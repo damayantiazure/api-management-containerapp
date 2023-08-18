@@ -9,14 +9,17 @@ namespace NeptureWebAPI
         public const string AZDO_URI = "https://dev.azure.com";
         public const string AZDO_IDENTITY_URI = "https://vssps.dev.azure.com";
         private const string AZDO_ORG_KEY = "AZDO_ORG";
+        private const string AZDO_PAT = "AZDO_PAT";
         private string orgName;
         private string appInsightConnStr;
+        private string pat;
         public AppConfig()
         {
             var orgName = System.Environment.GetEnvironmentVariable(AZDO_ORG_KEY);
             ArgumentNullException.ThrowIfNullOrEmpty(orgName, $"Environment variable {AZDO_ORG_KEY} is not set");
             this.orgName = orgName;
             this.appInsightConnStr = (appInsightConnStr != null) ? appInsightConnStr : "NOT-SET";
+            this.pat = System.Environment.GetEnvironmentVariable(AZDO_PAT);
         }
 
         public static string? GetAppInsightsConnStrFromEnv()
@@ -26,5 +29,6 @@ namespace NeptureWebAPI
 
         public string OrgName => orgName;
         public string AppInsightConnStr => appInsightConnStr;
+        public string Pat => pat;
     }
 }

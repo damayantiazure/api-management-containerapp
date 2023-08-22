@@ -16,6 +16,15 @@ if(enableAppInsights)
         options.ConnectionString = AppConfig.GetAppInsightsConnStrFromEnv();
     });
 }
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: "AllowAll",
+                      builder =>
+                      {
+                          builder.WithOrigins("*",
+                                              "*");
+                      });
+});
 
 builder.Services.AddLogging(logging =>
 {

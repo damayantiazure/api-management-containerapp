@@ -30,8 +30,32 @@ namespace NeptureWebAPI.AzureDevOps.Abstract
             where TRequestPayload : class 
             where TResponsePayload : class
         {
-            return await PostCoreAsync<TRequestPayload, TResponsePayload>(AppConfig.AZUREDEVOPSCLIENT, apiPath, payload, elevate);
+            return await SendRequestCoreAsync<TRequestPayload, TResponsePayload>(AppConfig.AZUREDEVOPSCLIENT, apiPath, payload, HttpMethod.Post, elevate);
         }
+
+        protected async virtual Task<TResponsePayload> PutAsync<TRequestPayload, TResponsePayload>(
+            string apiPath, TRequestPayload payload, bool elevate = false)
+            where TRequestPayload : class
+            where TResponsePayload : class
+        {
+            return await SendRequestCoreAsync<TRequestPayload, TResponsePayload>(AppConfig.AZUREDEVOPSCLIENT, apiPath, payload, HttpMethod.Put, elevate);
+        }
+
+        protected async virtual Task<TResponsePayload> PatchAsync<TRequestPayload, TResponsePayload>(
+            string apiPath, TRequestPayload payload, bool elevate = false)
+            where TRequestPayload : class
+            where TResponsePayload : class
+        {
+            return await SendRequestCoreAsync<TRequestPayload, TResponsePayload>(AppConfig.AZUREDEVOPSCLIENT, apiPath, payload, HttpMethod.Patch, elevate);
+        }
+
+        protected async virtual Task<bool> PatchWithoutBodyAsync(
+            string apiPath, bool elevate = false)
+        {
+            return await SendRequestWithoutBodyCoreAsync(AppConfig.AZUREDEVOPSCLIENT, apiPath, HttpMethod.Patch, elevate);
+        }
+
+        
 
         protected async virtual Task<TPayload> GetAsync<TPayload>(string apiPath, bool elevate = false) where TPayload : class
         {
@@ -64,8 +88,8 @@ namespace NeptureWebAPI.AzureDevOps.Abstract
             throw new InvalidOperationException($"Error: {response.StatusCode}");
         }
 
-        private async Task<TResponsePayload> PostCoreAsync<TRequestPayload, TResponsePayload>(
-            string apiType, string apiPath, TRequestPayload payload, bool elevate = false) 
+        private async Task<TResponsePayload> SendRequestCoreAsync<TRequestPayload, TResponsePayload>(
+            string apiType, string apiPath, TRequestPayload payload, HttpMethod httpMethod, bool elevate = false) 
             where TRequestPayload : class
             where TResponsePayload : class
         {
@@ -78,7 +102,7 @@ namespace NeptureWebAPI.AzureDevOps.Abstract
             await JsonSerializer.SerializeAsync<TRequestPayload>(memoryStream, payload, this.jsonSerializerOptions);
 
             var jsonContent = new StringContent(Encoding.UTF8.GetString(memoryStream.ToArray()) , Encoding.UTF8, "application/json");
-            var request = new HttpRequestMessage(HttpMethod.Post, path) 
+            var request = new HttpRequestMessage(httpMethod, path) 
             {
                 Content = jsonContent
             };
@@ -86,6 +110,10 @@ namespace NeptureWebAPI.AzureDevOps.Abstract
             if (response.IsSuccessStatusCode)
             {
                 var x = await response.Content.ReadAsStringAsync();
+                if(typeof(TResponsePayload) == typeof(string))
+                {   
+                    return (!string.IsNullOrWhiteSpace(x as string) ? x as string : string.Empty) as TResponsePayload;
+                }
                 var result = await response.Content.ReadFromJsonAsync<TResponsePayload>(this.jsonSerializerOptions);
                 if (result != null)
                 {
@@ -94,6 +122,20 @@ namespace NeptureWebAPI.AzureDevOps.Abstract
             }
             throw new InvalidOperationException($"Error: {response.StatusCode}");
         }
+
+        private async Task<bool> SendRequestWithoutBodyCoreAsync(
+            string apiType, string apiPath, HttpMethod httpMethod, bool elevate = false)
+        {
+            var (scheme, token) = GetCredentials(elevate);
+            using HttpClient client = httpClientFactory.CreateClient(apiType);
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(scheme, token);
+            var path = $"/{appConfiguration.OrgName}/{apiPath}";
+            
+            var request = new HttpRequestMessage(httpMethod, path);
+            var response = await client.SendAsync(request);
+            return response.IsSuccessStatusCode;
+        }
+
 
         protected string GetOrgName()
         {

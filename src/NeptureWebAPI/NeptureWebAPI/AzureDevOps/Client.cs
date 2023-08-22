@@ -1,6 +1,7 @@
 ﻿using NeptureWebAPI.AzureDevOps.Abstract;
 using NeptureWebAPI.AzureDevOps.Payloads;
 using NeptureWebAPI.Controllers;
+using System;
 using System.Net.Http.Headers;
 using System.Text.Json;
 
@@ -59,6 +60,45 @@ namespace NeptureWebAPI.AzureDevOps
 
             var payload = new AzDoClassificationNodePayload(OperationData: operation, SyncWorkItemTracking: false);
             return await PostAsync<AzDoClassificationNodePayload, AzDoClassificationNodeCreatedResponse>(path, payload, true);
+        }
+
+        public async Task<bool> ApplyAcksAsync(string namespaceId, AzDoAclEntryCollection[] aces)
+        {
+            var path = $"_apis/accesscontrollists/{namespaceId}?api-version=6.0";
+            await PostAsync<AzDoAclEntryPostBody, string>(path, new AzDoAclEntryPostBody(aces), true);
+            return true;
+        }
+
+        public async Task<bool> UpdateRoleAssginmentAsync(string apiVersion, string projectId, string resourceId, string seperator, string scope, AzDoRoleAssignment[] body)
+        {
+            var path = $"_apis/securityroles/scopes/{scope}/roleassignments/resources/{projectId}{seperator}{resourceId}?api-version={apiVersion}";
+            await PutAsync<AzDoRoleAssignment[], string>(path, body, true);
+            return true;
+        }
+
+        public async Task<bool> UpdateRoleInheritanceAsync(string apiVersion, string projectId, string resourceId, string seperator, string scope, bool inheritPermissions)
+        {
+            var path = $"_apis/securityroles/scopes/{scope}/roleassignments/resources/{projectId}{seperator}{resourceId}?api-version={apiVersion}&inheritPermissions={inheritPermissions}";
+            return await PatchWithoutBodyAsync(path, true);
+        }
+
+        public async Task<AzDoTypeRoleAssignment[]> GetRoleAssignmentAsync(string apiVersion, string projectId, string resourceId, string seperator, string scope)
+        {
+            var path = $"_apis/securityroles/scopes/{scope}/roleassignments/resources/{projectId}{seperator}{resourceId}?api-version={apiVersion}";
+            var roleAssignments = await GetAsync<AzDoTypeRoleAssignmentCollection>(path, true);
+            if(roleAssignments != null && roleAssignments.Value != null)
+            {
+                return roleAssignments.Value.ToArray();
+            }
+            return new List<AzDoTypeRoleAssignment>().ToArray();
+        }
+
+        public async Task<bool> DeleteRoleAssignmentAsync(string apiVersion, string projectId, string resourceId, string seperator, string scope, string[] identities)
+        {
+            var path = $"_apis/securityroles/scopes/{scope}/roleassignments/resources/{projectId}{seperator}{resourceId}?api-version={apiVersion}";
+            await PatchAsync<string[], string>(path, identities, true);
+
+            return true;
         }
     }
 }

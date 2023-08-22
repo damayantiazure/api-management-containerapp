@@ -1,8 +1,9 @@
-﻿using NeptureWebAPI.AzureDevOps.Abstract;
+﻿
+
+using Microsoft.ApplicationInsights.AspNetCore;
+using NeptureWebAPI.AzureDevOps.Abstract;
 using NeptureWebAPI.AzureDevOps.Payloads;
 using NeptureWebAPI.Controllers;
-using System;
-using System.Net.Http.Headers;
 using System.Text.Json;
 
 namespace NeptureWebAPI.AzureDevOps
@@ -99,6 +100,18 @@ namespace NeptureWebAPI.AzureDevOps
             await PatchAsync<string[], string>(path, identities, true);
 
             return true;
+        }
+
+        public async Task<AzDoRepository> CreateRepositoryAsync(string projectId, string repositoryName)
+        {
+            var path = $"{projectId}/_apis/git/Repositories?api-version=5.0-preview.1";
+            var payload = new 
+            {
+                name = repositoryName,
+                project = new { id = projectId }
+            };
+            var repo = await PostAsync<object, AzDoRepository>(path, payload, true);
+            return repo;
         }
     }
 }

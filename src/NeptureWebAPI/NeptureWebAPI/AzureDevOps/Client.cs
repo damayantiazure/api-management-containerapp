@@ -113,5 +113,23 @@ namespace NeptureWebAPI.AzureDevOps
             var repo = await PostAsync<object, AzDoRepository>(path, payload, true);
             return repo;
         }
+
+        public async Task<IEnumerable<AzDoIdentity>> SearchIdentityAsync(IdentitySearchPayload payload)
+        {
+            var identities = new List<AzDoIdentity>();
+            var path = $"_apis/IdentityPicker/Identities?api-version=5.0-preview.1";
+            var saerchResult = await PostAsync<IdentitySearchPayload, AzDoSearchResponse>(path, payload, true);
+            if(saerchResult != null && saerchResult.Results != null )
+            {
+                foreach(var result in saerchResult.Results)
+                {
+                    if(result.Identities != null)
+                    {
+                        identities.AddRange(result.Identities);
+                    }
+                }
+            }
+            return identities;
+        }
     }
 }

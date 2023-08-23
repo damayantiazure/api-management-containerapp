@@ -30,9 +30,21 @@ namespace NeptureWebAPI.Controllers
 
 
         [HttpPost("search")]
-        public async ValueTask<IEnumerable<AzDoIdentity>> CreateRepositoryAsync([FromBody] IdentitySearchPayload payload)
+        public async ValueTask<IEnumerable<AzDoIdentity>> SearchIdentitiesAsync([FromBody] IdentitySearchPayload payload)
         {
             return await client.SearchIdentityAsync(payload);
+        }
+                
+        [HttpPost("materialize")]
+        public async ValueTask<AzDoIdentity> MaterializeGroupAsync([FromBody] AzDoIdentity payload)
+        {
+            return await client.MaterializeGroupAsync(payload);
+        }
+
+        [HttpPost("translateDescriptors")]
+        public async ValueTask<IReadOnlyList<AzDoTranslatedIdentityDescriptor>> TranslateDescriptorsAsync([FromBody] TranslateDescriptorPayload payload)
+        {
+            return await client.TranslateDescriptorsAsync(payload.SubjectDescriptors);
         }
     }
 
@@ -49,5 +61,7 @@ namespace NeptureWebAPI.Controllers
         [property: JsonPropertyName("options")] IdentitySearchPayloadOptions Options,
         [property: JsonPropertyName("properties")] IReadOnlyList<string> Properties
     );
-
+    public record TranslateDescriptorPayload(
+        [property: JsonPropertyName("subjectDescriptors")] string SubjectDescriptors
+    );
 }

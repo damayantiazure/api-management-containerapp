@@ -67,6 +67,14 @@ namespace NeptureWebAPI.AzureDevOps.Abstract
             return await GetCoreAsync<TPayload>(AppConfig.AZUREDEVOPS_IDENTITY_CLIENT, apiPath, elevate);
         }
 
+        protected async virtual Task<TResponsePayload> PostVsspAsync<TRequestPayload, TResponsePayload>(
+            string apiPath, TRequestPayload payload, bool elevate = false)
+            where TRequestPayload : class
+            where TResponsePayload : class
+        {
+            return await SendRequestCoreAsync<TRequestPayload, TResponsePayload>(AppConfig.AZUREDEVOPS_IDENTITY_CLIENT, apiPath, payload, HttpMethod.Post, elevate);
+        }
+
         private async Task<TPayload> GetCoreAsync<TPayload>(
             string apiType, string apiPath, bool elevate = false) where TPayload : class
         {

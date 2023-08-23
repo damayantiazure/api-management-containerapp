@@ -131,5 +131,29 @@ namespace NeptureWebAPI.AzureDevOps
             }
             return identities;
         }
+
+        public async Task<AzDoIdentity> MaterializeGroupAsync(AzDoIdentity group)
+        {
+            var path = $"_apis/graph/groups?api-version=6.0-preview.1";
+            var payload = new
+            {
+                originId = group.OriginId
+            };
+            var materializedResponse = await PostVsspAsync<object, AzDoGroupMaterializeResponse>(path, payload, true);
+            
+            var newGroup = new AzDoIdentity(group.EntityId, group.EntityType, group.OriginDirectory, group.OriginId, materializedResponse.Domain,
+                group.LocalId, materializedResponse.PrincipalName, group.ScopeName, group.SamAccountName, materializedResponse.Descriptor, group.Department,
+                group.JobTitle, group.Mail, group.MailNickname, group.PhysicalDeliveryOfficeName, group.SignInAddress, group.Surname, group.Guest,
+                group.Description, group.IsMru);
+            return newGroup;
+        }
+
+        public async Task<IReadOnlyList<AzDoTranslatedIdentityDescriptor>> TranslateDescriptorsAsync(string subjectDescriptors)
+        {
+            var path = $"_apis/identities?api-version=7.0&subjectDescriptors={subjectDescriptors}&queryMembership=None";
+
+            var response = await GetVsspAsync<AzDoDescriptorTranslationResponse>(path, true);
+            return response.Value;            
+        }
     }
 }

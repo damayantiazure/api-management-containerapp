@@ -40,7 +40,19 @@ module frontendApp 'modules/http-app.bicep' = {
       {
         name: 'APPINSIGHT_CONN_STR'
         value: appInsights.properties.ConnectionString
-      }      
+      }
+      {
+        name: 'AZDO_TENANT_ID'
+        value: uami.properties.tenantId
+      }
+      {
+        name: 'AZDO_MANAGED_IDENTITY_ID'
+        value: uami.properties.clientId
+      }
+      {
+        name: 'AZDO_USE_MANAGED_IDENTITY'
+        value: 'YES'	
+      }                  
     ]
   }
 }

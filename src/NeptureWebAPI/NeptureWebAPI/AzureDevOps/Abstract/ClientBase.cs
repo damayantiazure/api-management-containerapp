@@ -1,5 +1,6 @@
 ﻿
 
+using NeptureWebAPI.AzureDevOps.Security;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
@@ -11,17 +12,20 @@ namespace NeptureWebAPI.AzureDevOps.Abstract
         protected readonly JsonSerializerOptions jsonSerializerOptions;
         private readonly IHttpContextAccessor httpContextAccessor;
         protected readonly AppConfig appConfiguration;
+        private readonly IdentitySupport identitySupport;
         protected readonly IHttpClientFactory httpClientFactory;
 
         public ClientBase(
             JsonSerializerOptions jsonSerializerOptions,
             IHttpContextAccessor httpContextAccessor,
-            AppConfig appConfiguration, 
+            AppConfig appConfiguration,
+            IdentitySupport identitySupport,
             IHttpClientFactory httpClientFactory)
         {
             this.jsonSerializerOptions = jsonSerializerOptions;
             this.httpContextAccessor = httpContextAccessor;
             this.appConfiguration = appConfiguration;
+            this.identitySupport = identitySupport;
             this.httpClientFactory = httpClientFactory;
         }
 
@@ -78,7 +82,7 @@ namespace NeptureWebAPI.AzureDevOps.Abstract
         private async Task<TPayload> GetCoreAsync<TPayload>(
             string apiType, string apiPath, bool elevate = false) where TPayload : class
         {
-            var (scheme, token) = GetCredentials(elevate);
+            var (scheme, token) = await identitySupport.GetCredentialsAsync(elevate);
             using HttpClient client = httpClientFactory.CreateClient(apiType);
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(scheme, token);
             var path = $"/{appConfiguration.OrgName}/{apiPath}";
@@ -101,7 +105,7 @@ namespace NeptureWebAPI.AzureDevOps.Abstract
             where TRequestPayload : class
             where TResponsePayload : class
         {
-            var (scheme, token) = GetCredentials(elevate);
+            var (scheme, token) = await identitySupport.GetCredentialsAsync(elevate);
             using HttpClient client = httpClientFactory.CreateClient(apiType);
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(scheme, token);
             var path = $"/{appConfiguration.OrgName}/{apiPath}";
@@ -134,7 +138,7 @@ namespace NeptureWebAPI.AzureDevOps.Abstract
         private async Task<bool> SendRequestWithoutBodyCoreAsync(
             string apiType, string apiPath, HttpMethod httpMethod, bool elevate = false)
         {
-            var (scheme, token) = GetCredentials(elevate);
+            var (scheme, token) = await identitySupport.GetCredentialsAsync(elevate);
             using HttpClient client = httpClientFactory.CreateClient(apiType);
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(scheme, token);
             var path = $"/{appConfiguration.OrgName}/{apiPath}";
@@ -149,31 +153,5 @@ namespace NeptureWebAPI.AzureDevOps.Abstract
         {
             return appConfiguration.OrgName;
         }
-
-        protected (string, string) GetCredentials(bool elevate = false)
-        {
-            if(elevate)
-            {
-                var base64Credential = Convert.ToBase64String(ASCIIEncoding.ASCII.GetBytes(string.Format("{0}:{1}", "", appConfiguration.Pat)));
-                var scheme = "Basic";
-                return (scheme, base64Credential);
-            }
-            else if (httpContextAccessor != null && httpContextAccessor.HttpContext != null)
-            {
-                var request = httpContextAccessor.HttpContext.Request;
-                if (request.Headers.TryGetValue("Authorization", out var authInfo) && authInfo.Any())
-                {
-                    var authValue = authInfo.First();
-                    var authValues = $"{authValue}".Split(' ', StringSplitOptions.RemoveEmptyEntries);
-                    if (authValues != null && authValues.Length > 0)
-                    {
-                        var scheme = authValues[0];
-                        var token = authValues[1];
-                        return (scheme, token);
-                    }
-                }
-            }
-            return ("Invalid Scheme", "Invalid Token");
-        }   
     }
 }

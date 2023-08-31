@@ -21,9 +21,9 @@ namespace NeptureWebAPI.Controllers
         }
 
         [HttpGet("loopback")]
-        public string Get()
+        public async Task<string> Get()
         {
-            return client.GetHealthInfo();
+            return await client.GetHealthInfo();
         }
 
         [HttpGet("all")]

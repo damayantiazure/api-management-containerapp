@@ -3,6 +3,7 @@
 using Microsoft.ApplicationInsights.AspNetCore;
 using NeptureWebAPI.AzureDevOps.Abstract;
 using NeptureWebAPI.AzureDevOps.Payloads;
+using NeptureWebAPI.AzureDevOps.Security;
 using NeptureWebAPI.Controllers;
 using System.Text.Json;
 
@@ -17,17 +18,17 @@ namespace NeptureWebAPI.AzureDevOps
             JsonSerializerOptions jsonSerializerOptions,
             AppConfig appConfiguration,
             IHttpClientFactory httpClientFactory,
-            ILogger<Client> logger) : base(jsonSerializerOptions, httpContextAccessor, appConfiguration, httpClientFactory)
+            IdentitySupport identitySupport,
+            ILogger<Client> logger) : base(jsonSerializerOptions, httpContextAccessor, 
+                appConfiguration, identitySupport, httpClientFactory)
         {
             this.logger = logger;
         }
 
-        public string GetHealthInfo()
+        public async Task<string> GetHealthInfo()
         {
-            var cred = this.GetCredentials();
             var orgName = this.GetOrgName();
-
-            return $"{orgName} - {cred.Item1} - {cred.Item2}";
+            return $"{orgName}";
         }
 
         public async Task<AzDoTeamCollection> GetTeamsAsync(bool mine = true, int top = 10, int skip = 0)
@@ -35,9 +36,9 @@ namespace NeptureWebAPI.AzureDevOps
             return await this.GetAsync<AzDoTeamCollection>($"_apis/teams?$mine={mine}&$top={top}&$skip={skip}&api-version=7.0-preview.3");
         }
 
-        public async Task<AzDoConnectionData> GetConnectionDataAsync()
+        public async Task<AzDoConnectionData> GetConnectionDataAsync(bool elevated = false)
         {
-            return await this.GetAsync<AzDoConnectionData>($"_apis/connectionData");
+            return await this.GetAsync<AzDoConnectionData>($"_apis/connectionData", elevated);
         }
 
         public async Task<AzDoGroupMembershipSlimCollection> GetGroupMembershipsAsync(string subjectDescriptor)

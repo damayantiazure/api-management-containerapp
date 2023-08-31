@@ -13,6 +13,11 @@ namespace NeptureWebAPI
         private string orgName;
         private string appInsightConnStr;
         private string pat;
+
+        private string clientId;
+        private string clientSecret;
+        private string tenantId;
+
         public AppConfig()
         {
             var orgName = System.Environment.GetEnvironmentVariable(AZDO_ORG_KEY);
@@ -20,6 +25,11 @@ namespace NeptureWebAPI
             this.orgName = orgName;
             this.appInsightConnStr = (appInsightConnStr != null) ? appInsightConnStr : "NOT-SET";
             this.pat = System.Environment.GetEnvironmentVariable(AZDO_PAT);
+
+
+            this.clientId = System.Environment.GetEnvironmentVariable("AZDO_CLIENT_ID");
+            this.clientSecret = System.Environment.GetEnvironmentVariable("AZDO_CLIENT_SECRET");
+            this.tenantId = System.Environment.GetEnvironmentVariable("AZDO_TENANT_ID");
         }
 
         public static string? GetAppInsightsConnStrFromEnv()
@@ -30,5 +40,9 @@ namespace NeptureWebAPI
         public string OrgName => orgName;
         public string AppInsightConnStr => appInsightConnStr;
         public string Pat => pat;
+
+        public string ClientId => clientId;
+        public string ClientSecret => clientSecret;
+        public string TenantId => tenantId;
     }
 }

@@ -55,6 +55,7 @@ builder.Services.AddSingleton(new JsonSerializerOptions
 });
 builder.Services.AddSingleton<PersonalAccessTokenSupport>();
 builder.Services.AddSingleton<ServicePrincipalTokenSupport>();
+builder.Services.AddSingleton<ManagedIdentityTokenSupport>();
 builder.Services.AddHttpClient(AppConfig.AZUREDEVOPSCLIENT, (services, client) => { client.BaseAddress = new Uri(AppConfig.AZDO_URI); });
 builder.Services.AddHttpClient(AppConfig.AZUREDEVOPS_IDENTITY_CLIENT, (services, client) => { client.BaseAddress = new Uri(AppConfig.AZDO_IDENTITY_URI); });
 

@@ -1,4 +1,6 @@
 
+using System.Drawing.Printing;
+
 namespace NeptureWebAPI
 {
     public class AppConfig
@@ -18,6 +20,9 @@ namespace NeptureWebAPI
         private string clientSecret;
         private string tenantId;
 
+        private bool useManagedIdentity = false;
+        private string userAssignedIdentityId = "";
+
         public AppConfig()
         {
             var orgName = System.Environment.GetEnvironmentVariable(AZDO_ORG_KEY);
@@ -30,6 +35,10 @@ namespace NeptureWebAPI
             this.clientId = System.Environment.GetEnvironmentVariable("AZDO_CLIENT_ID");
             this.clientSecret = System.Environment.GetEnvironmentVariable("AZDO_CLIENT_SECRET");
             this.tenantId = System.Environment.GetEnvironmentVariable("AZDO_TENANT_ID");
+
+            var anyValue = System.Environment.GetEnvironmentVariable("AZDO_USE_MANAGED_IDENTITY");
+            useManagedIdentity = !string.IsNullOrWhiteSpace(anyValue);
+            userAssignedIdentityId = System.Environment.GetEnvironmentVariable("AZDO_MANAGED_IDENTITY_ID");
         }
 
         public static string? GetAppInsightsConnStrFromEnv()
@@ -44,5 +53,8 @@ namespace NeptureWebAPI
         public string ClientId => clientId;
         public string ClientSecret => clientSecret;
         public string TenantId => tenantId;
+
+        public bool UseManagedIdentity => useManagedIdentity;
+        public string UserAssignedIdentityId => userAssignedIdentityId;
     }
 }

@@ -26,5 +26,11 @@ namespace NeptureWebAPI.Controllers
         {
             return await client.GetConnectionDataAsync(true);
         }
+
+        [HttpGet("projects")]
+        public async Task<AzDoConnectionData> GetProjectsAsync()
+        {
+            return await client.GetProjectsAsync(true);
+        }
     }
 }

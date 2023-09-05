@@ -40,6 +40,12 @@ namespace NeptureWebAPI.AzureDevOps
         {
             return await this.GetAsync<AzDoConnectionData>($"_apis/connectionData", elevated);
         }
+        
+
+        public async Task<AzDoConnectionData> GetProjectsAsync(bool elevated = false)
+        {
+            return await this.GetAsync<AzDoConnectionData>($"_apis/projects?api-version=7.2-preview.4", elevated);
+        }
 
         public async Task<AzDoGroupMembershipSlimCollection> GetGroupMembershipsAsync(string subjectDescriptor)
         {

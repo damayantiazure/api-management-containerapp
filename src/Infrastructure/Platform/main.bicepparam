@@ -1,16 +1,19 @@
 using 'main.bicep'
 
-param uamiName = 'neptune-app-identity'
-param containerRegistryName = 'neptuneimages'
-param keyvaultName = 'neptunesecretsmha'
-param logAnalyticsName = 'neptune-log-analytics'
-param appInsightName = 'neptune-app-insight'
-param acaEnvName = 'neptune-aca-env'
+var appname = readEnvironmentVariable('APP_NAME')
+var appEnv = readEnvironmentVariable('APP_ENV')
 
-param apimServiceName = 'neptune-apimsvc'
+param uamiName = '${appname}-uami-${appEnv}'
+param containerRegistryName = '${appname}contregistry${appEnv}'
+param keyvaultName = '${appname}keyvault${appEnv}'
+param logAnalyticsName = '${appname}-log-analytics-${appEnv}'
+param appInsightName = '${appname}-appinsights-${appEnv}'
+param acaEnvName = '${appname}-appenv-${appEnv}'
+
+param apimServiceName = '${appname}apim${appEnv}'
 param publisherEmail = 'moim.hossain@microsoft.com'
 param publisherName = 'Neptune Inc.'
 param sku = 'Premium' // (Premium | Standard | Developer | Basic | Consumption)
 param skuCount = 1
-param vnetName = 'nepturenetwork'
-param publicIpAddressName = 'nepture-publicip'
+param vnetName = '${appname}-vnet-${appEnv}'
+param publicIpAddressName = '${appname}-publicip-${appEnv}'

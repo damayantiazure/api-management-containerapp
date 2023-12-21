@@ -2,7 +2,7 @@
 
 imageName="neptune-webapi"
 tag="beta2"
-registry="neptuneimages.azurecr.io"
+registry="neptunectnimages.azurecr.io"
 
 echo "Login to Azure Container Registry"
 accessToken=$(az acr login --name $registry --expose-token --output tsv --query accessToken)

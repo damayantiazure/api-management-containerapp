@@ -1,6 +1,6 @@
 $imageName = "neptune-webapi"
 $tag = "beta2"
-$registry = "neptuneimages.azurecr.io"
+$registry = "neptunectnimages.azurecr.io"
 
 
 Write-Output "Login to Azure Container Registry"

@@ -1,10 +1,12 @@
 #!/bin/bash
 
-resourceGroupName="APIM-DEVOPS"
-location="westeurope"
+export resourceGroupName="APIM-DEVOPS"
+export location="westeurope"
+export APP_NAME="solar"
+export APP_ENV="dev"
+export TAG_NAME="beta2"
 
 echo "Starting deploying the app provisioning..."
-
 
 
 echo "Deploying app Bicep file..."

@@ -11,7 +11,7 @@
             </set-header>
         </send-request>
         <choose>
-            <when condition="@(((IResponse)context.Variables["tokenstate"]).StatusCode != 200)">
+            <when condition="@(((IResponse)context.Variables["tokenstate"]).Body.As<JObject>()["authenticatedUser"]["providerDisplayName"].ToString() == "Anonymous")">
                 <return-response>
                     <set-status code="401" reason="Unauthorized" />
                     <set-header name="WWW-Authenticate" exists-action="override">
@@ -25,11 +25,11 @@
         </choose>
         <set-header name="Host" exists-action="override">
             <value>{{containerappbackendhostname}}</value>
-        </set-header>        
+        </set-header>
     </inbound>
-  <backend>
-    <forward-request />
-  </backend>
-  <outbound />
-  <on-error />
+    <backend>
+        <forward-request />
+    </backend>
+    <outbound />
+    <on-error />
 </policies>

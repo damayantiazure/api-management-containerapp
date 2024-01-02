@@ -43,6 +43,19 @@ resource nameValueEntryForBackendHost 'Microsoft.ApiManagement/service/namedValu
   ]
 }
 
+module neptuneApiVersionSet 'neptune-product/versionSets/neptune-version-set.bicep' = {
+  name: 'neptune-version-set'
+  params: {
+    name: 'neptune-version-set'
+    apimServiceName: apimServiceName
+    description: 'Version set for Neptune API'
+    versionHeaderName: 'api-version'    
+  }
+  dependsOn: [
+    apiManagementService
+  ]
+}
+
 module neptuneProducts 'neptune-product/neptune-product.bicep' = {
   name: productName
   params: {
@@ -50,6 +63,7 @@ module neptuneProducts 'neptune-product/neptune-product.bicep' = {
     productName: productName
     apiName: apiName
     serviceUrl: 'https://${environment.properties.staticIp}/'
+    versionSetId: neptuneApiVersionSet.outputs.apiVersionSetId
   }
   dependsOn: [
     environment

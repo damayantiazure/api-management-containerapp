@@ -52,7 +52,11 @@ module frontendApp 'modules/http-app.bicep' = {
       {
         name: 'AZDO_USE_MANAGED_IDENTITY'
         value: 'YES'	
-      }                  
+      }
+      {
+        name: 'SOFTWARE_VERSION'
+        value: tagName	
+      }
     ]
   }
 }

@@ -1,8 +1,8 @@
 #!/bin/bash
 
-export resourceGroupName="APIM-DEVOPS"
+export resourceGroupName="APIM-DEVOPS-Coantapp"
 export location="westeurope"
-export APP_NAME="solar"
+export APP_NAME="solardemo1"
 export APP_ENV="dev"
 export TAG_NAME="beta2"
 

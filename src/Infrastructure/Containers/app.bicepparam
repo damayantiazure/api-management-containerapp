@@ -13,5 +13,5 @@ param containerRegistryName = '${appname}contregistry${appEnv}'
 param acaEnvName = '${appname}-appenv-${appEnv}'
 
 param appInsightName = '${appname}-appinsights-${appEnv}'
-param azureDevOpsOrg = 'moim' 
+param azureDevOpsOrg = 'damayantibhuyan' 
 

@@ -10,4 +10,4 @@ echo "Starting deploying the app provisioning..."
 
 
 echo "Deploying app Bicep file..."
-az deployment group create --resource-group $resourceGroupName --template-file 'app.bicep'  --parameters app.bicepparam
+az deployment group create --resource-group $resourceGroupName --template-file 'apps.bicep'  --parameters app.bicepparam

@@ -3,7 +3,7 @@ using 'app.bicep'
 var appname = readEnvironmentVariable('APP_NAME')
 var appEnv = readEnvironmentVariable('APP_ENV')
 
-#param uamiName = '${appname}-uami-${appEnv}'
+
 
 param uamiName = 'solardemo1-uami-dev'
 

@@ -12,6 +12,8 @@ param tagName = readEnvironmentVariable('TAG_NAME')
 param containerRegistryName = '${appname}contregistry${appEnv}'
 param acaEnvName = '${appname}-appenv-${appEnv}'
 
-param appInsightName = '${appname}-appinsights-${appEnv}'
+param appInsightName = 'solardemo2-appinsights-dev'
+
+
 param azureDevOpsOrg = 'damayantibhuyan' 
 
